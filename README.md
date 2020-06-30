@@ -8,6 +8,8 @@ This notebook is one of my assignment in a course. It will go through all the te
 </ul>
 
 ### Instruction:
-Put the text files in Files folder. <br />
-Name the text files as x.txt, where x is number. All files should be named in subsequence order (ex: first file should be 1.txt, second is 2.txt, etc) <br />
-Use files in Result folder to check the result. For term frequencies, it is named corresponding with the text files (ex: term frequency result of 1.txt is tf_1.txt) <br />
+<ul>
+  <li>Put the text files in Files folder.</li>
+  <li>Name the text files as x.txt, where x is number. All files should be named in subsequence order (ex: first file should be 1.txt, second is 2.txt, etc) </li>
+  <li>Use files in Result folder to check the result. For term frequencies, it is named corresponding with the text files (ex: term frequency result of 1.txt is tf_1.txt) </li>
+</ul
