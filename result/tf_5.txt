@@ -1,0 +1,650 @@
+parsing	3
+vcf	14
+files	6
+with	11
+hadoop	11
+streaming
+home
+dataintensive	1
+computing
+hadoop
+parsing	1
+vcfs	1
+hadoop
+1	1
+introduction
+variant	1
+call	1
+format	4
+(vcf)	1
+are	5
+a	24
+standard	1
+type	1
+of	29
+file	11
+used	2
+to	45
+represent	1
+information	3
+about	2
+variations	1
+within	3
+genome	1
+as	5
+just	3
+anything	1
+genomic	1
+these	1
+can	7
+get	1
+very	4
+large	1
+quickly	1
+(eg	1
+dozens	1
+gigabytes	1
+compressed)	1
+and	17
+the	69
+process	4
+them	2
+converting	1
+into	4
+any	3
+particular	1
+be	8
+conceptually	1
+simple	3
+yet	3
+dataintensive
+
+this	1
+example	4
+illustrates	1
+following	1
+points	1
+that	20
+were	2
+missing	1
+in	12
+wordcount	3
+example
+
+it	1
+uses	2
+python	17
+library	9
+specifically	1
+designed	2
+parse	1
+must	3
+installed
+this	1
+installed	4
+by	5
+nonroot	1
+user	1
+using	5
+nondefault	1
+version	3
+python
+this	1
+is	19
+not	6
+parallel	1
+way
+this	1
+guide	4
+builds	1
+upon	2
+my	4
+basics	1
+streaming	2
+so	2
+i	5
+recommend	2
+against	1
+trying	1
+understand	1
+this	22
+without	1
+first	5
+going	1
+through	1
+guides	1
+comes	1
+supporting	1
+material	2
+on	6
+github	1
+which	3
+meant	1
+work	2
+sdsc	1
+gordon	1
+i've	1
+also	1
+semipersistent	1
+clusters	2
+futuregrid	1
+for	9
+much	1
+testing	1
+development	1
+here	2
+should	1
+wide	1
+range	1
+minimal	1
+modification
+
+2	1
+conceptual	2
+overview
+files	1
+don't	4
+always	2
+come	1
+perfect	1
+mapreduce	2
+output	3
+your	5
+analysis	1
+doesn't	2
+take	1
+form	1
+keyvalue	1
+pairs	1
+thus	3
+propose	1
+few	1
+extra	1
+steps	2
+pipeline	1
+highlighted	3
+red
+
+proprocessing	1
+data
+mapping
+shuffling
+reducing
+postprocessing	1
+data
+within	1
+context	1
+preprocessing	3
+necessary	2
+because	2
+contains	1
+header	7
+describes	1
+rest	1
+our	11
+mappers	1
+(or	3
+reducers)	1
+will	8
+all	2
+need	5
+have	4
+order	1
+reader	1
+make	1
+sense	1
+actual	2
+data	4
+gets	2
+fed	1
+it	6
+step	5
+involves	1
+reading	2
+top	1
+input	3
+printing	1
+lines	1
+stdout	1
+until	1
+nonheader	1
+line	1
+reached
+
+schematic	1
+preprocessing
+we	1
+copy	3
+printed	2
+separate	3
+exists	1
+outside	2
+hdfs	3
+bother	1
+messing	1
+file's	1
+contents	3
+obviates	1
+actually	2
+read	1
+entire	4
+since	4
+act	1
+writing)	1
+too	1
+big	1
+do	4
+proprocessing	1
+leaves	1
+us	1
+(headertxt)	1
+original	1
+untouched	1
+file
+
+the	1
+postprocessing	2
+dependent	1
+what	2
+we	8
+want	6
+when	4
+was	4
+getting	1
+application	2
+area	1
+transform	1
+structured	1
+could	1
+fromed	1
+postgresql	1
+database	2
+taking	1
+from	3
+connecting	1
+postgres	1
+froming	1
+handled	1
+step
+
+3	1
+install	6
+nonroot
+python	1
+makes	1
+quite	1
+easy	2
+libraries	4
+having	1
+root	1
+privileges	2
+machine	1
+virtualenv	5
+end	1
+essentially	1
+gives	1
+you	17
+installation	2
+behaves	1
+if	3
+administrative	1
+sets	1
+up	3
+oneline	1
+script	4
+enable	1
+disable)	1
+its	1
+use
+
+the	1
+setting	1
+course	1
+download	1
+unpack	1
+it
+
+$	1
+wget	1
+httppypipythonorgpackagessourcevvirtualenvvirtualenv1712targz
+$	1
+tar	1
+xzf	1
+virtualenv1712targz
+you	1
+then	2
+decide	2
+prefix	1
+personal	2
+pick	1
+~mypython	1
+but	1
+arbitrary	1
+may	2
+each	1
+project	1
+either	1
+way	1
+execute	1
+virtualenvpy	1
+unpacked	1
+tell	1
+where	3
+set	2
+camp	1
+however	1
+forget	1
+load	6
+python273	4
+module	7
+use	3
+python27	1
+instead	1
+systemdefault	1
+python24
+
+$	1
+python273
+$	2
+virtualenv1712virtualenvpy	1
+~mypython
+this	1
+create	1
+bunch	1
+including
+
+$homemypythonbin
+$homemypythonbinpython	1
+	26
+executable	1
+knows	1
+find	1
+installing
+$homemypythonbinpip	1
+libraries
+$homemypythonbinactivate	1
+you'll	1
+source	2
+activate	2
+virtual	2
+environment
+$homemypythonlib	1
+installed
+then	1
+"enable"	1
+virutal	1
+environment	4
+sourcing	1
+next	1
+time	1
+log	1
+though	1
+remember	1
+first
+
+$	1
+~mypythonbinactivate
+your	1
+prompt	1
+change	1
+indicate	2
+you're	1
+operating	1
+active	1
+pip	2
+command	1
+tutorial	1
+require	1
+pyvcf	2
+library
+
+(mypython)$	1
+pyvcf
+downloadingunpacking	1
+pyvcf
+	1
+downloading	1
+pyvcf064targz
+	1
+running	1
+setuppy	1
+egg_info	1
+package	1
+pyvcf
+
+successfully	1
+pyvcf
+cleaning	1
+up
+now	1
+confirm	1
+accessible	1
+virtualenv'ed	1
+python
+
+(mypython)$	1
+python
+python	1
+273	1
+(default	1
+feb	1
+7	1
+2013	1
+211153)	1
+
+[gcc	1
+412	1
+20080704	1
+(red	1
+hat	1
+41250)	1
+linux2
+type	1
+"help"	1
+"copyright"	1
+"credits"	1
+or	2
+"license"	1
+more	1
+information
+>>>import	1
+vcf
+>>>
+4	1
+mapper
+this	1
+section	4
+done	3
+see	2
+mapper+reducer	2
+code	2
+github
+
+5	1
+reducer
+this	1
+github
+
+6	1
+job	3
+launch
+there	1
+number	1
+additions	1
+made	2
+previous	1
+run	1
+map	1
+changes	3
+red	1
+below
+
+$	1
+$homemypythonbinpython	1
+$pwdparsevcfpy	4
+b	2
+patientdatavcf	2
+>	1
+headertxt
+$	1
+dfs	2
+mkdir	1
+data
+$	2
+copyfromlocal	1
+\
+	8
+jar	1
+opthadoopcontribstreaminghadoopstreaming103jar	1
+d	2
+mapredmaptasks=4	2
+mapredreducetasks=0	2
+mapper	2
+"$homemypythonbinpython	1
+m	2
+headertxt030"	1
+reducer	2
+">python	1
+r"	1
+"datapatientdatavcf"	1
+"dataoutput"	1
+cmdenv	3
+ld_library_path=$ld_library_path
+the	1
+following
+
+module	1
+provided	2
+(27x)	1
+system	1
+(24x)
+python	1
+added	1
+extract	1
+file
+d	1
+really	1
+optional	1
+tells	1
+would	1
+like	1
+(but	1
+won't	1
+necessarily	2
+get)	1
+four	1
+mappers
+d	1
+disables	1
+shuffle	1
+reduce	2
+anything
+we	1
+explicitly	1
+specify	3
+path	1
+custom	2
+($homemypythonbinpython	1
+)	1
+calling	1
+mapperreducer	1
+scripts	1
+ensure	1
+has	1
+headertxt030	1
+passed	1
+function	1
+expects	1
+commaseparated	1
+list	1
+containing
+the	1
+containing	1
+vcf's	1
+(headertxt)
+the	1
+allele	1
+frequency	1
+above	1
+record	1
+(030)
+we	1
+mapredreducetasks=0
+cmdenv	1
+ld_library_path=$ld_library_path	1
+critical	1
+passes	1
+environment's	1
+$ld_library_path	2
+variable	1
+execution	1
+modified	2
+issued	1
+option	1
+ensures	1
+loaded	1
+propagated	1
+out	1
+multiple	1
+options	1
+propagate	1
+other	1
+variables	1
+mappersreducers	1
+need
+7	1
+scaling	2
+behavior
+this	1
+yet
+
+this	1
+document	1
+developed	1
+support	1
+national	1
+science	1
+foundation	1
+(nsf)	1
+under	1
+grant	1
+no	1
+0910812	1
+indiana	1
+university	1
+"futuregrid	1
+an	1
+experimental	1
+highperformance	1
+grid	1
+testbed"	1
+opinions	1
+findings	1
+conclusions	1
+recommendations	1
+expressed	1
+those	1
+author(s)	1
+reflect	1
+views	1
+nsf
+
+1	1
+introduction
+2	1
+overview
+3	1
+nonroot
+4	1
+mapper
+5	1
+reducer
+6	1
+launch
+7	1
+behavior
+last	1
+october	1
+20	1
+2019
+glenn@glennklockwoodcom	1

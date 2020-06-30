@@ -1,0 +1,265 @@
+benefits	3
+of	11
+cloud	11
+computing
+cloud	1
+computing	8
+offers	1
+your	31
+business	9
+many	2
+it	6
+allows	3
+you	17
+to	26
+set	1
+up	4
+what	1
+is	4
+essentially	1
+a	8
+virtual	2
+office	2
+give	2
+the	14
+flexibility	2
+connecting	1
+anywhere	1
+any	2
+time	3
+with	6
+growing	1
+number	1
+webenabled	1
+devices	1
+used	1
+in	7
+today's	1
+environment	2
+(eg	2
+smartphones	1
+tablets)	1
+access	5
+data	6
+even	1
+easier	1
+there	1
+are	4
+moving	1
+cloud
+
+reduced	1
+costs
+moving	1
+may	5
+reduce	3
+cost	2
+managing	1
+and	16
+maintaining	1
+systems	3
+rather	2
+than	2
+purchasing	2
+expensive	2
+equipment	1
+for	7
+can	5
+costs	3
+by	1
+using	2
+resources	1
+service	4
+provider	3
+be	6
+able	2
+operating	1
+because
+
+the	1
+system	2
+upgrades	3
+new	1
+hardware	1
+software	2
+included	2
+contract
+you	1
+no	1
+longer	1
+need	2
+pay	1
+wages	1
+expert	1
+staff
+your	1
+energy	1
+consumption	1
+reduced
+there	1
+fewer	1
+delays
+scalability
+your	1
+scale	2
+or	4
+down	1
+operation	1
+storage	1
+needs	2
+quickly	3
+suit	1
+situation	1
+allowing	1
+as	4
+change	1
+installing	1
+yourself	1
+computer	2
+handle	1
+this	2
+frees	1
+so	1
+get	1
+on	4
+running	1
+business
+
+business	1
+continuity
+protecting	1
+an	2
+important	1
+part	1
+continuity	1
+planning	1
+whether	1
+experience	1
+natural	1
+disaster	1
+power	1
+failure	1
+other	1
+crisis	1
+having	1
+stored	1
+ensures	1
+backed	1
+protected	1
+secure	2
+safe	1
+location	1
+being	1
+again	1
+conduct	1
+usual	1
+minimising	1
+downtime	1
+loss	1
+productivity
+
+collaboration	1
+efficiency
+collaboration	1
+gives	1
+ability	2
+communicate	1
+share	3
+more	2
+easily	1
+outside	1
+traditional	1
+methods	1
+if	2
+working	1
+project	1
+across	1
+different	1
+locations	1
+could	3
+use	1
+employees	2
+contractors	1
+third	1
+parties	1
+same	1
+files	1
+also	1
+choose	1
+model	1
+that	1
+makes	1
+easy	1
+records	2
+advisers	1
+quick	1
+way	1
+accounting	1
+accountant	1
+financial	1
+adviser)
+
+flexibility	1
+work	3
+practices
+cloud	1
+flexible	1
+their	1
+practices	1
+example	1
+have	2
+from	2
+home	1
+holiday	1
+via	1
+commute	1
+(providing	1
+internet	1
+connection)	1
+while	1
+offsite	1
+connect	1
+easily
+
+access	1
+automatic	2
+updates
+access	1
+updates	1
+requirements	1
+fee	1
+depending	1
+will	1
+regularly	1
+updated	1
+latest	1
+technology	1
+include	1
+uptodate	1
+versions	1
+well	1
+servers	1
+processing	1
+power
+
+also	1
+consider
+read	1
+about	1
+security	1
+considerations
+find	1
+out	1
+how	1
+create	1
+digital	3
+strategy	1
+business
+improve	1
+knowledge	1
+skills	1
+advance	1
+queensland	1
+community	1
+champions	1
+program	1

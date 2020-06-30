@@ -1,0 +1,1059 @@
+running	8
+hadoop	66
+clusters	8
+on	30
+gordon
+home	1
+	176
+dataintensive	1
+computing	1
+a	41
+cluster	33
+gordon
+
+as	1
+of	42
+july	1
+11	1
+2014	2
+i	12
+no	2
+longer	2
+work	5
+at	8
+the	105
+san	1
+diego	1
+supercomputer	5
+center	1
+this	37
+site	1
+is	34
+being	2
+updated	2
+but	9
+will	15
+be	11
+maintaining	1
+permanent	1
+copy	3
+it	17
+here
+
+table	1
+contents
+introduction
+the	1
+submit	10
+script
+set	1
+up	22
+environment	10
+variables
+set	1
+directory	7
+&	1
+configs
+format	1
+hdfs
+start	1
+hadoop
+further	1
+niceties
+final	1
+script
+using	1
+your	29
+cluster
+shutting	1
+down	3
+cluster
+introduction
+on	1
+xsede's	1
+gordon	12
+resource	10
+sdsc	1
+we	9
+provide	2
+myhadoop	17
+framework	1
+to	66
+allow	3
+users	2
+dynamically	1
+provision	1
+within	1
+our	5
+traditional	7
+hpc	6
+and	42
+run	10
+quick	1
+jobs	6
+have	7
+page	5
+which	13
+explains	1
+how	4
+an	6
+endtoend	1
+job	23
+that	20
+sets	3
+transient	1
+format	1
+hdfs	10
+move	3
+input	2
+data	4
+in	24
+mapreduce	7
+out	3
+terminate	1
+find	1
+process	4
+not	7
+very	3
+flexible
+
+for	1
+purposes	1
+testing	1
+mappers	1
+reducers	1
+doing	3
+lot	1
+smaller	1
+analyses	1
+debugging	2
+issues	1
+found	2
+able	1
+establish	1
+semipersistent	3
+useful	1
+its	5
+own	3
+right	1
+while	1
+one	3
+can	11
+feasibly	1
+do	6
+amazon	1
+ec2	1
+so	9
+annoying	1
+costs	1
+money	1
+(unlike	1
+xsede	1
+futuregrid	8
+are	9
+free)	1
+wanted	1
+just	11
+get	2
+could	1
+prototype	1
+code	1
+learn	1
+features	2
+quite	1
+simple	5
+describes	1
+create	1
+like	6
+sdsc's	2
+by	15
+mean	1
+for	25
+as	6
+long	1
+you	33
+tell	1
+rather	1
+than	2
+lifetime	1
+single	3
+addition	1
+some	2
+systems	1
+remotely	1
+from	6
+supercomputer's	2
+login	2
+node	8
+much	1
+would	3
+regular	2
+batch	1
+jobs
+
+i've	1
+spun	1
+these	3
+both	1
+xsedesdsc	1
+several	1
+machines	1
+all	12
+come	1
+with	10
+preconfigured	2
+however	5
+beautifully	1
+portable	1
+set	7
+script	14
+wrappers	1
+utilize	1
+portability	1
+if	6
+you're	2
+interested	2
+trying	1
+i've	3
+released	1
+newer	1
+version	2
+accompanying	1
+guide	2
+deploying	1
+supercomputers	2
+simplify	1
+task
+
+in	1
+remainder	1
+use	7
+term	1
+refer	2
+task	1
+manager	7
+designed	1
+primarily	1
+mpi	2
+collection	1
+allocated	3
+compute	3
+nodes	13
+jobs
+
+the	1
+script
+this	1
+we're	1
+spinning	1
+any	5
+needs	2
+conceptually	1
+following	4
+things
+
+set	1
+variables	5
+needed	3
+java	4
+(path	1
+java_home)	1
+already	1
+provided
+set	1
+(my_hadoop_home)
+set	1
+(handled	1
+myhadoop)
+set	1
+structure	1
+populate	2
+files	7
+necessary	3
+start	6
+userland	1
+(also	1
+handled	1
+myhadoop)
+interface	1
+figure	1
+what	3
+should	12
+(masters	1
+slaves	1
+files)
+establish	1
+location	7
+(hadooptmpdir	1
+cluster's	3
+log	3
+(hadoop_log_dir)
+make	1
+config	5
+required	2
+files
+format	1
+filesystem
+spin	1
+master	2
+slave	2
+namenode	3
+service	1
+jobtracker	1
+service
+designing	1
+bash	1
+managers	1
+need	5
+looks	1
+something	5
+follows
+
+step	1
+#1#3
+export	1
+my_hadoop_home="opthadoopcontribmyhadoop"
+source	1
+$my_hadoop_homebinsetenvsh
+you	1
+may	3
+also	4
+module	1
+add	3
+provides	1
+default	2
+environment
+
+the	1
+export	6
+my_hadoop_home	1
+line	4
+bit	2
+silly	1
+(sourcing	1
+setenvsh	5
+among	1
+other	2
+things	2
+variables
+
+my_hadoop_home	1
+where	5
+gets	2
+template	3
+configuration	3
+upon	1
+launch
+hadoop_home	1
+installations	1
+know	2
+executables	1
+libraries	1
+are
+hadoop_data_dir	1
+determines	2
+sit	1
+really	1
+important	2
+because	1
+sitting	1
+filesystem	2
+local	4
+each	4
+node
+on	1
+ssds	1
+high	1
+performance	1
+(scratch$user$pbs_jobid)	1
+finditself
+on	1
+hotel	4
+1	2
+tb	1
+scratch	2
+disk	1
+(scratchlocal$userdata)
+on	1
+sierra	5
+currently	1
+tmp	1
+probably	1
+disk
+hadoop_log_dir	1
+hadoop's	1
+logs	2
+(including	2
+errors)	1
+go	1
+extremely	1
+failures	1
+impossible	1
+without	4
+looking	2
+kept	1
+here
+you	1
+want	4
+overwrite	1
+systemwide	1
+values	2
+hadoop_data_dir	1
+hadoop_log_dir	1
+case	2
+new	1
+after	4
+sourcing	2
+or	3
+skip	1
+entirely	1
+specify	1
+four	3
+directly	2
+script
+
+step	1
+#4
+export	1
+hadoop_conf_dir=$pbs_o_workdir$pbs_jobid
+export	1
+pbs_nodefilez=$(mktemp)
+sed	1
+e	2
+'s$ibnet0g'	2
+$pbs_nodefile	7
+>	3
+$pbs_nodefilez
+$my_hadoop_homebinconfiguresh	1
+n	9
+4	7
+c	6
+$hadoop_conf_dir	3
+||	2
+exit	2
+1
+at	1
+core	1
+configuresh	5
+takes	1
+steps	1
+#1#3	1
+merges	1
+information	2
+together	2
+populates	2
+customized	2
+defines	1
+literally	1
+everything	3
+about	3
+personal	3
+launched	1
+supercomputer
+
+hadoop_conf_dir	1
+critical	1
+variable	3
+contains	1
+variable's	1
+contents	1
+determine	1
+controlling	1
+whenever	1
+command	7
+scripts	2
+usually	1
+give	1
+static	1
+hadoop_conf_dir	2
+(eg	4
+home$userconfig	1
+gordon)	2
+name	2
+according	3
+unique	2
+id	1
+($pbs_jobid	1
+permutation	1
+thereof)	1
+actually	2
+spawn	1
+bunch	1
+simultaneously	1
+having	1
+their	1
+directories	2
+stomping	1
+other
+
+pbs_nodefilez	1
+gordonspecific	2
+lists	1
+names	1
+tcp	6
+over	7
+infiniband	4
+interfaces	1
+associated	1
+provided	4
+via	1
+(torque	1
+pbs	2
+sge	1
+etc)	1
+sed	1
+file	2
+adding	1
+"ibnet0	1
+end	1
+gcn1421ibnet0	1
+interface	1
+called	2
+gcn1421)	1
+pbs_nodefilez	2
+see	1
+sidebar	1
+below	1
+more	3
+generic	1
+way
+
+once	1
+defined	1
+(which	1
+pbsconfiguresh	1
+sgeconfiguresh	1
+else)	1
+does	3
+following
+
+creates	1
+$hadoop_conf_dir
+copies	1
+$hadoop_conf_dir
+defines	1
+'master'	1
+$hadoop_conf_dirmasters	1
+$hadoop_conf_dirslaves	1
+list	1
+(torquepbsslurmsgeetc)
+defines	1
+correct	2
+mapredsitexml	1
+coresitexml
+defines	2
+using	5
+$hadoop_data_dir	1
+$hadoop_log_dir	3
+hadoopenvsh
+ssh's	1
+into	6
+nukes	1
+they	1
+contain	1
+nothing
+a	1
+safeguard	1
+(perhaps	1
+unnecessary)	1
+built	1
+must	1
+define	1
+many	1
+(in	1
+means	2
+nodes)	1
+even	1
+though	1
+i'm	2
+sure	3
+why	1
+change	2
+parameter	1
+size	1
+cluster
+
+tcp	1
+infiniband
+if	1
+has	2
+configured	1
+normal	1
+020a	1
+understand	1
+$pbs_nodefilez	1
+sierra)	1
+this
+
+old_pbs_nodefile=$pbs_nodefile	1
+
+export	3
+pbs_nodefile=$(mktemp)	1
+
+sed	3
+$old_pbs_nodefile	1
+
+$my_hadoop_homebinpbsconfiguresh	1
+pbs_nodefile=$old_pbs_nodefile
+that	1
+is
+
+make	1
+backup	2
+torque
+append	1
+ib	2
+suffix	1
+hostnames	1
+contained	1
+referred	1
+was	3
+ibnet0	1
+simply	1
+ib
+run	1
+configure	1
+specified	2
+modified	1
+sed
+after	1
+put	1
+backedup	1
+back	2
+place	1
+don't	2
+torque	1
+might	1
+severely	1
+mess	1
+when	3
+completes	2
+100%	3
+this
+step	1
+#5
+after	1
+done	1
+ready	1
+formatted	1
+accept	1
+operate
+
+$hadoop_homebinhadoop	1
+format
+step	1
+#6
+finally	1
+itself	1
+spin	1
+cluster
+
+$hadoop_homebinstartallsh
+	1
+
+sleep	2
+$((12*3600180))
+if	1
+follow	1
+point	2
+replacing	1
+sleep	3
+(sleep	1
+$((12*3600180))	1
+causes	1
+hang	1
+twelve	2
+hours	2
+less	1
+three	1
+minutes	1
+teardown)	1
+stays	1
+waiting	1
+further	1
+instruction
+
+further	1
+niceties
+at	1
+there	2
+few	1
+extra	1
+bits	2
+make	1
+fully	1
+functioning	1
+since	2
+request	1
+those	1
+resources	3
+top	1
+script
+
+#pbs	1
+l	4
+nodes=4ppn=1native
+#pbs	2
+walltime=120000
+#pbs	2
+q	2
+normal
+finally	1
+gave	1
+ourselves	1
+180	1
+seconds	1
+clean	3
+before	1
+forcibly	1
+kills	1
+like
+
+$hadoop_homebinstopallsh
+cp	1
+lr	3
+$pbs_o_workdirhadooplogs$pbs_jobid
+$my_hadoop_homebincleanupsh	2
+$hadoop_conf_dir
+which	1
+do
+
+$hadoop_homebinstopallsh	1
+shut	3
+nodes
+the	1
+cp	1
+makes	2
+logfiles	1
+submitted	1
+($pbs_o_workdir)
+the	1
+cleanupsh	1
+(or	1
+possibly	1
+pbscleanupsh)	1
+destroys	1
+doesn't	2
+take	1
+space	1
+next	1
+user	1
+nodes
+these	1
+final	2
+lines	1
+aren't	1
+strictly	1
+most	2
+destroy	1
+created	1
+time	1
+always	1
+happen	1
+practice	1
+it's	1
+measure	1
+courtesy	1
+itself
+
+the	1
+script
+when	1
+string	1
+tasks	1
+look	1
+gordon
+
+#binbash
+#pbs	1
+hadoopcluster
+#pbs	1
+normal
+#pbs	1
+j	1
+oe
+#pbs	1
+o	1
+hadoopclusterlog
+#pbs	1
+v
+	1
+my_hadoop_home="opthadoopcontribmyhadoop"
+export	1
+hadoop_home="opthadoop"
+export	1
+hadoop_conf_dir=$pbs_o_workdir$pbs_jobid
+	1
+'s$ibnet0'	1
+$pbs_o_workdirhadoophoststxt
+export	1
+pbs_nodefilez=$pbs_o_workdirhadoophoststxt
+	1
+
+$my_hadoop_homebinconfiguresh	1
+$hadoop_conf_dir
+	1
+'s^export	2
+hadoop_pid_dir=*export	1
+hadoop_pid_dir=scratch'$user''$pbs_jobid''	1
+$hadoop_conf_dirhadoopenvsh
+sed	1
+tmpdir=*export	1
+tmpdir=scratch'$user''$pbs_jobid''	1
+$hadoop_conf_dirhadoopenvsh
+	1
+
+$hadoop_homebinhadoop	1
+format
+	1
+
+$hadoop_homebinstartallsh
+	1
+$((12*3600180))
+	1
+
+$hadoop_homebinstopallsh
+cp	1
+$hadoop_conf_dir
+the	1
+highlighted	1
+above	2
+gnarly	1
+(mouseover	1
+brief	1
+explanation)
+
+if	1
+readytouse	1
+unmodified	1
+developed	2
+for
+
+futuregrid	1
+infiniband
+futuregrid	1
+infiniband
+xsedesdsc	1
+written	1
+mentioned	2
+above
+using	1
+cluster
+once	1
+ssh	1
+(determine	1
+qstat	1
+u	1
+$user)	1
+either	1
+way	2
+hadoop_conf_dir=$homehadoop123456gordonfe2local	1
+(where	1
+123456gordonfe2local	1
+jobid	1
+submitted)	1
+then	1
+command
+
+$	1
+hadoop_conf_dir=homeglockhadoop123456gordonfe2local
+$	2
+dfs	5
+mkdir	1
+data
+	2
+#	4
+download	1
+full	1
+text	1
+moby	1
+dick
+$	1
+wget	1
+httpwwwgutenbergorgcacheepub2701pg2701txt
+	1
+hdfs
+$	1
+copyfromlocal	1
+pg2701txt	1
+wordcount	2
+example	1
+it
+$	1
+jar	1
+opthadoophadoopexamples103jar	1
+datapg2701txt	1
+wordcountoutput
+130620	1
+181736	2
+info	6
+inputfileinputformat	1
+total	1
+paths	1
+1
+130620	1
+mapredjobclient	5
+job_201306201808_0001
+130620	1
+181737	1
+map	3
+0%	1
+reduce	3
+0%
+130620	2
+181751	1
+181803	1
+100%
+130620	1
+181808	1
+complete	1
+job_201306201808_0001
+
+$	1
+ls	1
+wordcountoutput
+found	1
+3	1
+items
+rwrr	1
+2	2
+glock	3
+supergroup	3
+0	2
+20130620	3
+1818	1
+userglockwordcountoutput_success
+drwxrxrx	1
+1817	2
+userglockwordcountoutput_logs
+rwrr	1
+366674	1
+userglockwordcountoutputpartr00000
+$	1
+cat	1
+wordcountoutputpartr00000
+"'a	1
+3
+"'also	1
+1
+"'are	1
+1
+"'aye	1
+2
+"'aye?	1
+1
+
+	1
+output	1
+real	1
+filesystem
+$	1
+copytolocal	1
+wordcountoutputpartr00000	1
+mobydickout
+if	1
+forget	1
+path	1
+path=opthadoopbin$path)
+
+shutting	1
+cluster
+as	1
+thus	1
+qdel	2
+off	2
+proper	1
+located	1
+bottom	1
+issued	1
+hand	1
+using
+
+$	1
+opthadoopbinstopallsh
+$	1
+opthadoopcontribmyhadoopbinpbscleanupsh	1
+$hadoop_conf_dir
+$	1
+123456
+acknowledgments	1
+outlook
+running	1
+still	1
+complicated	1
+am	1
+working	1
+developing	1
+update	1
+hopes	1
+deliver	1
+following
+
+more	1
+abstraction	1
+user's	1
+possible
+better	1
+support	3
+1x	1
+2x
+more	1
+flexibility	1
+scalable	1
+modes	1
+operation	1
+(standalone	1
+namenodes	1
+trackers	1
+builtin	1
+support)
+if	1
+please	1
+contact	1
+me	3
+knowing	1
+demand	1
+capability	1
+wonders	1
+making	1
+priority	1
+me
+
+this	1
+national	1
+science	1
+foundation	1
+(nsf)	1
+grant	1
+oci0910812	1
+indiana	1
+university	1
+experimental	1
+highperformance	1
+grid	1
+testbed	1
+made	1
+possible	1
+afforded	1
+through	1
+project	1
+entitled	1
+exploring	1
+frameworks	1
+course	1
+heavy	1
+awarded	1
+under	1
+oci0910847
+
+last	1
+sunday	1
+february	1
+9	1
+256	1
+pmcontact	1
+valid	2
+xhtml	1
+10	1
+strict	1
+css	1

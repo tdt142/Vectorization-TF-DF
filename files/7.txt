@@ -1,0 +1,213 @@
+Running Hadoop Clusters on Gordon
+Home : Data-Intensive Computing : Running a Hadoop Cluster on Gordon
+
+As of July 11, 2014, I no longer work at the San Diego Supercomputer Center. This site is no longer being updated, but I will be maintaining a permanent copy of it here.
+
+Table of Contents
+Introduction
+The Submit Script
+Set up Environment Variables
+Set up Hadoop directory & configs
+Format HDFS
+Start up Hadoop
+Further Niceties
+Final Script
+Using your Hadoop Cluster
+Shutting down your Hadoop Cluster
+Introduction
+On XSEDE's Gordon resource at SDSC, we provide the myHadoop framework to allow users to dynamically provision Hadoop clusters within our traditional HPC cluster and run quick jobs. We have a page which explains how to run an end-to-end Hadoop job that sets up the transient Hadoop cluster, format HDFS, move input data in, run map/reduce, move data out, and terminate the Hadoop cluster, but I find this process is not very flexible.
+
+For the purposes of testing mappers and reducers, doing a lot of smaller analyses, and debugging issues, I found that being able to establish a semi-persistent Hadoop cluster on a traditional HPC resource to be very useful in its own right. While one can feasibly do this on Amazon EC2, doing so is annoying and costs money (unlike XSEDE and FutureGrid, which are free). I wanted to just get a Hadoop cluster running so that I could prototype code and learn features, and the process is quite simple. This page describes how to create a semi-persistent Hadoop cluster on a traditional HPC resource like SDSC's Gordon supercomputer, and by semi-persistent, I mean that the Hadoop cluster will run for as long as you tell it to rather than just for the lifetime of a single map/reduce job. In addition, some systems will allow you to submit map/reduce jobs to it remotely from the supercomputer's login node, much like you would submit regular batch jobs.
+
+I've spun up these Hadoop clusters on both XSEDE/SDSC Gordon and several FutureGrid machines, all of which come with myHadoop preconfigured. However Hadoop is beautifully portable, and myHadoop is a simple set of script wrappers that utilize this portability. If you're interested in trying Hadoop on your own cluster environment, I've released a newer version of myHadoop and an accompanying guide on Deploying Hadoop on Traditional Supercomputers to simplify the task.
+
+In the remainder of this page, I will use the term supercomputer to refer to the traditional HPC cluster running a task manager and designed primarily to run MPI. I will use Hadoop cluster to refer to the collection of allocated compute nodes on the supercomputer on which we will run map/reduce jobs.
+
+The Submit Script
+This Hadoop cluster we're spinning up will be allocated nodes Gordon just as any regular MPI job would, so it needs a submit script. Conceptually, the job script needs to do the following things:
+
+Set up environment variables needed by Java (PATH and JAVA_HOME) if not already provided
+Set up environment variables needed by myHadoop (MY_HADOOP_HOME)
+Set up environment variables needed by Hadoop (handled by myHadoop)
+Set up the Hadoop directory structure and populate it with all the files necessary to start a Hadoop cluster in userland (also handled by myHadoop)
+Interface with the resource manager to figure out on what nodes Hadoop should run (masters and slaves files)
+Establish the location HDFS (hadoop.tmp.dir and the Hadoop cluster's log files (HADOOP_LOG_DIR)
+Make a config directory and populate it with all these required config files
+Format the HDFS filesystem
+Spin up the master and slave nodes, start the namenode service, and start the jobtracker service
+Designing this process in a simple bash script, which resource managers need to start jobs, looks something like what follows.
+
+Step #1-#3
+export MY_HADOOP_HOME="/opt/hadoop/contrib/myHadoop"
+source $MY_HADOOP_HOME/bin/setenv.sh
+You may need to also provide module add java to set up the Java environment. On FutureGrid this is necessary, but Gordon provides Java in the default environment.
+
+The export MY_HADOOP_HOME line is a bit silly; it sets the location of myHadoop so that the following line (sourcing setenv.sh can, among other things, also set the location of myHadoop. This setenv.sh script sets the following environment variables:
+
+MY_HADOOP_HOME - where myhadoop gets its template Hadoop configuration files upon job launch
+HADOOP_HOME - required by all Hadoop installations to know where all of its executables and libraries are
+HADOOP_DATA_DIR - determines where HDFS should sit. This is really important because HDFS should be sitting on a filesystem that is local to each cluster node.
+On Gordon, this should be set to the local SSDs for high performance (/scratch/$USER/$PBS_JOBID). Also where setenv.sh can find...itself.
+On Hotel, this is the 1 TB local scratch disk (/scratch/local/$USER/data)
+On Sierra, this is currently /tmp but should probably be the local scratch disk.
+HADOOP_LOG_DIR - determines where Hadoop's logs (including all job errors) should go. This is extremely important, as debugging job failures is impossible without looking at the logs kept here.
+You may want to overwrite the system-wide values for HADOOP_DATA_DIR and HADOOP_LOG_DIR if you know what you are doing. In this case, you can export new values after sourcing setenv.sh, or just skip sourcing setenv.sh entirely and just specify all four environment variables directly in your job script.
+
+Step #4
+export HADOOP_CONF_DIR=$PBS_O_WORKDIR/$PBS_JOBID
+export PBS_NODEFILEZ=$(mktemp)
+sed -e 's/$/.ibnet0/g' $PBS_NODEFILE > $PBS_NODEFILEZ
+$MY_HADOOP_HOME/bin/configure.sh -n 4 -c $HADOOP_CONF_DIR || exit 1
+At its core, myHadoop is this one configure.sh script which takes the environment variables set in Steps #1-#3 and a set of preconfigured template files, merges that information together, and populates a customized Hadoop configuration directory that defines literally everything about your personal Hadoop cluster that will be launched on the supercomputer.
+
+HADOOP_CONF_DIR is a very critical environment variable, and it contains the location of this customized Hadoop configuration directory. This variable's contents determine which Hadoop cluster you are controlling whenever you use the hadoop command. The default myHadoop scripts usually give a static location for HADOOP_CONF_DIR (e.g., /home/$USER/config on Gordon), but if you name the config directory according to your unique job id ($PBS_JOBID or some permutation thereof), you can actually spawn a bunch of Hadoop clusters simultaneously without having their config directories stomping on each other.
+
+PBS_NODEFILEZ is a Gordon-specific variable that lists the names of the TCP over Infiniband interfaces associated with the nodes provided for your Hadoop cluster via the resource manager (Torque, PBS, SGE, etc). The following sed line populates this file by adding ".ibnet0 to the end of each node name (e.g., gcn-14-21.ibnet0 is the Infiniband interface for the node called gcn-14-21). PBS_NODEFILEZ will not work on other clusters; see the sidebar about Infiniband below for how to do this in a more generic way.
+
+Once HADOOP_CONF_DIR and PBS_NODEFILEZ are defined, the myHadoop configure.sh (which may be called pbs-configure.sh, sge-configure.sh, or something else) does the following:
+
+creates your personal $HADOOP_CONF_DIR
+copies the template Hadoop config files to your personal $HADOOP_CONF_DIR
+defines the 'master' node in $HADOOP_CONF_DIR/masters and slave nodes in $HADOOP_CONF_DIR/slaves according to the list of nodes allocated to this job by your resource manager (Torque/PBS/SLURM/SGE/etc)
+defines the correct master node in mapred-site.xml and core-site.xml
+defines the location of HDFS using $HADOOP_DATA_DIR in core-site.xml
+defines the location of your Hadoop cluster's log files according to $HADOOP_LOG_DIR in hadoop-env.sh
+ssh's into each node of your Hadoop cluster and nukes the HDFS data and log directories so they contain nothing
+A safeguard (perhaps unnecessary) built into myHadoop is that you must define how many Hadoop nodes you want (in this case, -n 4 means four Hadoop nodes) even though myHadoop gets this information from the supercomputer's resource manager. I'm not sure why this is, but be sure to change the -n parameter if you want to change the size of your cluster.
+
+TCP over Infiniband
+If your cluster has TCP over Infiniband configured but you are using the normal myHadoop 0.20a which does not understand the $PBS_NODEFILEZ variable (e.g., like FutureGrid Sierra), you will need to do something like this:
+
+OLD_PBS_NODEFILE=$PBS_NODEFILE                                                
+export PBS_NODEFILE=$(mktemp)                                                
+sed -e 's/$/.ibnet0/g' $OLD_PBS_NODEFILE > $PBS_NODEFILE                          
+$MY_HADOOP_HOME/bin/pbs-configure.sh -n 4 -c $HADOOP_CONF_DIR || exit 1      
+export PBS_NODEFILE=$OLD_PBS_NODEFILE
+That is,
+
+Make a backup of the $PBS_NODEFILE provided by Torque
+Append the correct TCP over IB suffix to the hostnames contained in the file referred to by $PBS_NODEFILE. On Gordon this was .ibnet0, but on FutureGrid Sierra this is simply ib
+Run configure.sh which will configure Hadoop to use the nodes specified in the $PBS_NODEFILE we just modified with sed
+After configure.sh has set up everything we need in $HADOOP_CONF_DIR, put our backed-up $PBS_NODEFILE back in place. If you don't do this, Torque might severely mess up when the job completes. I'm not 100% sure about this.
+Step #5
+After configure.sh is done, the Hadoop cluster is ready to work. However, you will want to have an HDFS filesystem formatted so Hadoop can accept files on which it can operate.
+
+$HADOOP_HOME/bin/hadoop namenode -format
+Step #6
+Finally, a single command provided by Hadoop itself is all you need to actually spin up your cluster.
+
+$HADOOP_HOME/bin/start-all.sh
+ 
+sleep $((12*3600-180))
+If you follow the Hadoop guide for Gordon, this is the point in your script at which you would start running your map/reduce job. However replacing that with a simple sleep command (sleep $((12*3600-180)) causes the job to just hang out for twelve hours, less three minutes for cluster teardown) means the Hadoop cluster stays up and running, just waiting for further instruction.
+
+Further Niceties
+At this point, there are just a few extra bits to add to make this a fully functioning PBS script. Since we specified that our Hadoop cluster should run for twelve hours and use four nodes, we have to request those resources from the resource manager at the top of our submit script:
+
+#PBS -l nodes=4:ppn=1:native
+#PBS -l walltime=12:00:00
+#PBS -q normal
+Finally, we gave ourselves 180 seconds in the sleep command to clean up the job before the resource manager forcibly kills it. After that sleep command, we should have something like
+
+$HADOOP_HOME/bin/stop-all.sh
+cp -Lr $HADOOP_LOG_DIR $PBS_O_WORKDIR/hadoop-logs.$PBS_JOBID
+$MY_HADOOP_HOME/bin/cleanup.sh -n 4 -c $HADOOP_CONF_DIR
+which do
+
+$HADOOP_HOME/bin/stop-all.sh is the Hadoop command to shut down all cluster nodes
+The cp -Lr ... line makes a backup of your Hadoop logfiles to the directory from which you submitted this cluster job ($PBS_O_WORKDIR)
+The cleanup.sh (or possibly pbs-cleanup.sh) script destroys HDFS on all of the cluster nodes so that it doesn't take up any more space for the next user of your compute nodes
+These final lines aren't strictly necessary since most clusters (including Gordon) will destroy everything you created on the compute node when your time is up. However this doesn't always happen in practice, so it's a measure of courtesy to have your job script clean up after itself.
+
+The Final Script
+When you string all of these tasks together into a single job script, it should look something like this for Gordon:
+
+#!/bin/bash
+#PBS -N hadoopcluster
+#PBS -l nodes=4:ppn=1:native
+#PBS -l walltime=12:00:00
+#PBS -q normal
+#PBS -j oe
+#PBS -o hadoopcluster.log
+#PBS -V
+ 
+export MY_HADOOP_HOME="/opt/hadoop/contrib/myHadoop"
+export HADOOP_HOME="/opt/hadoop"
+export HADOOP_CONF_DIR=$PBS_O_WORKDIR/$PBS_JOBID
+ 
+sed 's/$/.ibnet0/' $PBS_NODEFILE > $PBS_O_WORKDIR/hadoophosts.txt
+export PBS_NODEFILEZ=$PBS_O_WORKDIR/hadoophosts.txt
+ 
+$MY_HADOOP_HOME/bin/configure.sh -n 4 -c $HADOOP_CONF_DIR
+ 
+sed -i 's:^export HADOOP_PID_DIR=.*:export HADOOP_PID_DIR=/scratch/'$USER'/'$PBS_JOBID':' $HADOOP_CONF_DIR/hadoop-env.sh
+sed -i 's:^export TMPDIR=.*:export TMPDIR=/scratch/'$USER'/'$PBS_JOBID':' $HADOOP_CONF_DIR/hadoop-env.sh
+ 
+$HADOOP_HOME/bin/hadoop namenode -format
+ 
+$HADOOP_HOME/bin/start-all.sh
+ 
+sleep $((12*3600-180))
+ 
+$HADOOP_HOME/bin/stop-all.sh
+cp -Lr $HADOOP_LOG_DIR $PBS_O_WORKDIR/hadoop-logs.$PBS_JOBID
+$MY_HADOOP_HOME/bin/cleanup.sh -n 4 -c $HADOOP_CONF_DIR
+The things I've highlighted above are the gnarly bits that are unique to Gordon (mouse-over for a brief explanation).
+
+If you are looking for a ready-to-use script that will work with an unmodified version of myHadoop on your own cluster, you can use the scripts I've developed for
+
+FutureGrid Hotel - a cluster without TCP over Infiniband
+FutureGrid Sierra - a cluster with TCP over Infiniband
+XSEDE/SDSC Gordon - written without any of the Gordon-specific myHadoop features mentioned above
+Using Your Hadoop Cluster
+Once your cluster is up and running, you can move data into HDFS and submit map/reduce jobs. You will have to ssh into any one of your Hadoop cluster's nodes (determine its nodes using qstat -u $USER) to submit Hadoop jobs on Gordon, but FutureGrid Sierra and Hotel should allow you to submit directly from the login node. Either way, you have to do is export HADOOP_CONF_DIR=$HOME/hadoop/123456.gordon-fe2.local (where 123456.gordon-fe2.local is the jobid of this cluster job you just submitted), then start using the hadoop command:
+
+$ export HADOOP_CONF_DIR=/home/glock/hadoop/123456.gordon-fe2.local
+$ hadoop dfs -mkdir data
+  # Download the full text of Moby Dick
+$ wget http://www.gutenberg.org/cache/epub/2701/pg2701.txt
+  # Copy it into HDFS
+$ hadoop dfs -copyFromLocal ./pg2701.txt data/
+  # Run the wordcount example on it
+$ hadoop jar /opt/hadoop/hadoop-examples-1.0.3.jar wordcount data/pg2701.txt wordcount-output
+13/06/20 18:17:36 INFO input.FileInputFormat: Total input paths to process : 1
+13/06/20 18:17:36 INFO mapred.JobClient: Running job: job_201306201808_0001
+13/06/20 18:17:37 INFO mapred.JobClient:  map 0% reduce 0%
+13/06/20 18:17:51 INFO mapred.JobClient:  map 100% reduce 0%
+13/06/20 18:18:03 INFO mapred.JobClient:  map 100% reduce 100%
+13/06/20 18:18:08 INFO mapred.JobClient: Job complete: job_201306201808_0001
+...
+$ hadoop dfs -ls wordcount-output
+Found 3 items
+-rw-r--r--   2 glock supergroup          0 2013-06-20 18:18 /user/glock/wordcount-output/_SUCCESS
+drwxr-xr-x   - glock supergroup          0 2013-06-20 18:17 /user/glock/wordcount-output/_logs
+-rw-r--r--   2 glock supergroup     366674 2013-06-20 18:17 /user/glock/wordcount-output/part-r-00000
+$ hadoop dfs -cat wordcount-output/part-r-00000
+"'A 3
+"'Also  1
+"'Are   1
+"'Aye,  2
+"'Aye?  1
+...
+  # Copy our output back to the real filesystem
+$ hadoop dfs -copyToLocal wordcount-output/part-r-00000 ./mobydick.out
+If you get hadoop: command not found, don't forget to add Hadoop to your path (e.g., export PATH=/opt/hadoop/bin:$PATH).
+
+Shutting Down Your Hadoop Cluster
+As mentioned above, most supercomputers should clean up after you when your Hadoop cluster job completes. Thus, you can just qdel it to shut it off. However, the proper way to shut off your Hadoop cluster is located at the bottom of the job script and can be issued by hand using
+
+$ export HADOOP_CONF_DIR=/home/glock/hadoop/123456.gordon-fe2.local
+$ /opt/hadoop/bin/stop-all.sh
+$ /opt/hadoop/contrib/myHadoop/bin/pbs-cleanup.sh -n 4 -c $HADOOP_CONF_DIR
+$ qdel 123456
+Acknowledgments and Outlook
+Running Hadoop jobs on traditional clusters is still a bit more complicated than it should be, and I am working on developing an update to myHadoop which hopes to deliver the following:
+
+More abstraction so that the user's submit script is as simple as possible
+Better support for Hadoop 1.x, and support for Hadoop 2.x
+More flexibility for scalable modes of operation (standalone namenodes and job trackers, built-in TCP over IB support)
+If you're at all interested in any of this, please contact me. Knowing that there is demand for the capability to run Hadoop on HPC clusters does wonders for making it a priority for me.
+
+This page was developed with support from the National Science Foundation (NSF) using resources provided by grant OCI-0910812 to Indiana University for FutureGrid: An Experimental, High-Performance Grid Test-bed. This work was made possible by the resources afforded to me through a project entitled Exploring map/reduce frameworks for users of traditional HPC on FutureGrid Hotel and Sierra. Of course, this page also makes heavy use of Gordon, SDSC's supercomputer awarded under OCI-0910847.
+
+Last updated Sunday, February 9, 2014 at 2:56 PMcontact me Valid XHTML 1.0 Strict Valid CSS
